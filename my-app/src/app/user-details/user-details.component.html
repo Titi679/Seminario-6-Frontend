@@ -1,0 +1,37 @@
+<div *ngIf="editUser">
+  <label for="first_name">First Name:</label>
+  <input type="text" id="first_name" [(ngModel)]="editUser.name.first_name">
+
+  <label for="middle_name">Middle Name:</label>
+  <input type="text" id="middle_name" [(ngModel)]="editUser.name.middle_name">
+
+  <label for="last_name">Last Name:</label>
+  <input type="text" id="last_name" [(ngModel)]="editUser.name.last_name">
+
+  <label for="email">Email:</label>
+  <input type="email" id="email" [(ngModel)]="editUser.email">
+
+  <label for="phone_number">Phone Number:</label>
+  <input type="tel" id="phone_number" [(ngModel)]="editUser.phone_number">
+
+  <label for="gender">Gender:</label>
+  <input type="text" id="gender" [(ngModel)]="editUser.gender">
+
+  <!-- <button type="button" (click)="updateUser()">Update User Details</button> -->
+</div>
+<div *ngIf="user">
+  <h2>{{user.name.first_name}} {{user.name.middle_name}} {{user.name.last_name}}</h2>
+  <div><span>ID:</span> {{user.id}}</div>
+  <div><span>Email:</span> {{user.email}}</div>
+  <div><span>Phone Number:</span> {{user.phone_number}}</div>
+  <div><span>Gender:</span> {{user.gender}}</div>
+
+  <h3>Posts:</h3>
+  <ul>
+    <li *ngFor="let post of getUserPosts(user.id)">
+      <button (click)="showPostDetails.emit(post)">{{post.title}}</button>
+    </li>
+  </ul>
+  
+  <button (click)="deselect.emit()">Back to Users</button>
+</div>

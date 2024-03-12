@@ -1,0 +1,38 @@
+<h2>My Users</h2>
+
+<button type="button" (click)="showAddUserForm = true">+</button>
+
+<div *ngIf="showAddUserForm">
+  <label for="first_name">First Name:</label>
+  <input type="text" id="first_name" [(ngModel)]="newUser.name.first_name">
+
+  <label for="middle_name">Middle Name:</label>
+  <input type="text" id="middle_name" [(ngModel)]="newUser.name.middle_name">
+
+  <label for="last_name">Last Name:</label>
+  <input type="text" id="last_name" [(ngModel)]="newUser.name.last_name">
+
+  <label for="email">Email:</label>
+  <input type="email" id="email" [(ngModel)]="newUser.email">
+
+  <label for="phone_number">Phone Number:</label>
+  <input type="tel" id="phone_number" [(ngModel)]="newUser.phone_number">
+
+  <label for="gender">Gender:</label>
+  <input type="text" id="gender" [(ngModel)]="newUser.gender">
+
+  <button type="button" (click)="postUser()">Add User</button>
+</div>
+
+<ul class="users" *ngIf="!selectedUser">
+  <li *ngFor="let user of users">
+    <button type="button" (click)="onSelect(user)">
+      <span  class="name">{{user.name.first_name}} {{user.name.middle_name}} {{user.name.last_name}}</span>
+    </button>
+  </li>
+</ul>
+
+<app-user-details *ngIf="selectedUser && !selectedPost" [user]="selectedUser" [posts]="posts" (deselect)="deselectUser()" (showPostDetails)="showPostDetails($event)"></app-user-details>
+
+<app-post-details *ngIf="selectedPost" [post]="selectedPost" (goBack)="selectedPost = undefined"></app-post-details>
+
