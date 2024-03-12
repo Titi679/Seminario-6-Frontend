@@ -1,25 +1,27 @@
 <h2>My Users</h2>
 
-<button type="button" (click)="showAddUserForm = true">+</button>
+<button type="button" *ngIf="!showAddUserForm && !selectedUser && !isUserSelected" (click)="showAddUser(true)">+</button>
+<button type="button" *ngIf="showAddUserForm && !selectedUser && !isUserSelected" (click)="showAddUser(false)">-</button>
+
 
 <div *ngIf="showAddUserForm">
-  <label for="first_name">First Name:</label>
-  <input type="text" id="first_name" [(ngModel)]="newUser.name.first_name">
+  <label for="first_name" *ngIf="showAddUserForm && !selectedUser && !isUserSelected">First Name:</label>
+  <input type="text" *ngIf="showAddUserForm && !selectedUser && !isUserSelected" id="first_name" [(ngModel)]="newUser.name.first_name"><br>
 
-  <label for="middle_name">Middle Name:</label>
-  <input type="text" id="middle_name" [(ngModel)]="newUser.name.middle_name">
+  <label for="middle_name" *ngIf="showAddUserForm && !selectedUser && !isUserSelected">Middle Name:</label>
+  <input type="text" *ngIf="showAddUserForm && !selectedUser && !isUserSelected" id="middle_name" [(ngModel)]="newUser.name.middle_name"><br>
 
-  <label for="last_name">Last Name:</label>
-  <input type="text" id="last_name" [(ngModel)]="newUser.name.last_name">
+  <label for="last_name" *ngIf="showAddUserForm && !selectedUser && !isUserSelected">Last Name:</label>
+  <input type="text" *ngIf="showAddUserForm && !selectedUser && !isUserSelected" id="last_name" [(ngModel)]="newUser.name.last_name"><br>
 
-  <label for="email">Email:</label>
-  <input type="email" id="email" [(ngModel)]="newUser.email">
+  <label for="email" *ngIf="showAddUserForm && !selectedUser && !isUserSelected">Email:</label>
+  <input type="email" *ngIf="showAddUserForm && !selectedUser && !isUserSelected" id="email" [(ngModel)]="newUser.email"><br>
 
-  <label for="phone_number">Phone Number:</label>
-  <input type="tel" id="phone_number" [(ngModel)]="newUser.phone_number">
+  <label for="phone_number" *ngIf="showAddUserForm && !selectedUser && !isUserSelected">Phone Number:</label>
+  <input type="tel" *ngIf="showAddUserForm && !selectedUser && !isUserSelected" id="phone_number" [(ngModel)]="newUser.phone_number"><br>
 
-  <label for="gender">Gender:</label>
-  <input type="text" id="gender" [(ngModel)]="newUser.gender">
+  <label for="gender" *ngIf="showAddUserForm && !selectedUser && !isUserSelected">Gender:</label>
+  <input type="text" *ngIf="showAddUserForm && !selectedUser && !isUserSelected" id="gender" [(ngModel)]="newUser.gender"><br>
 
   <button type="button" (click)="postUser()">Add User</button>
 </div>
@@ -32,7 +34,7 @@
   </li>
 </ul>
 
-<app-user-details *ngIf="selectedUser && !selectedPost" [user]="selectedUser" [posts]="posts" (deselect)="deselectUser()" (showPostDetails)="showPostDetails($event)"></app-user-details>
+<app-user-details *ngIf="selectedUser && !selectedPost" [user]="selectedUser" [posts]="posts" (deselect)="deselectUser()" (showPostDetails)="showPostDetails($event)" ></app-user-details>
 
 <app-post-details *ngIf="selectedPost" [post]="selectedPost" (goBack)="selectedPost = undefined"></app-post-details>
 

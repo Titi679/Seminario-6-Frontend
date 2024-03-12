@@ -1,23 +1,26 @@
+<button *ngIf="!update" (click)="updateEdit(true)">Modo Edición</button>
+<button *ngIf="update" (click)="updateEdit(false)">Modo Lectura</button>
+
 <div *ngIf="editUser">
-  <label for="first_name">First Name:</label>
-  <input type="text" id="first_name" [(ngModel)]="editUser.name.first_name">
+  <label *ngIf="update" for="first_name">First Name:</label>
+  <input *ngIf="update" type="text" id="first_name" [(ngModel)]="editUser.name.first_name"><br>
 
-  <label for="middle_name">Middle Name:</label>
-  <input type="text" id="middle_name" [(ngModel)]="editUser.name.middle_name">
+  <label *ngIf="update" for="middle_name">Middle Name:</label>
+  <input *ngIf="update" type="text" id="middle_name" [(ngModel)]="editUser.name.middle_name"><br>
 
-  <label for="last_name">Last Name:</label>
-  <input type="text" id="last_name" [(ngModel)]="editUser.name.last_name">
+  <label *ngIf="update" for="last_name">Last Name:</label>
+  <input *ngIf="update" type="text" id="last_name" [(ngModel)]="editUser.name.last_name"><br>
 
-  <label for="email">Email:</label>
-  <input type="email" id="email" [(ngModel)]="editUser.email">
+  <label *ngIf="update" for="email">Email:</label>
+  <input *ngIf="update" type="email" id="email" [(ngModel)]="editUser.email"><br>
 
-  <label for="phone_number">Phone Number:</label>
-  <input type="tel" id="phone_number" [(ngModel)]="editUser.phone_number">
+  <label *ngIf="update" for="phone_number">Phone Number:</label>
+  <input *ngIf="update" type="phone_number" id="phone_number" [(ngModel)]="editUser.phone_number"><br>
 
-  <label for="gender">Gender:</label>
-  <input type="text" id="gender" [(ngModel)]="editUser.gender">
+  <label *ngIf="update" for="gender">Gender:</label>
+  <input *ngIf="update" type="text" id="gender" [(ngModel)]="editUser.gender"><br>
 
-  <!-- <button type="button" (click)="updateUser()">Update User Details</button> -->
+  <button *ngIf="update" type="button" (click)="updateUser()">Update User Details</button>
 </div>
 <div *ngIf="user">
   <h2>{{user.name.first_name}} {{user.name.middle_name}} {{user.name.last_name}}</h2>

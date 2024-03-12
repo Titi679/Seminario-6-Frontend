@@ -18,7 +18,7 @@ export class UserService {
     return this.http.post('http://127.0.0.1:3000/user', newUser);
   }
   
-  updateUser(updateUser : User) {
-    return this.http.put('http://127.0.0.1:3000/user/:id', updateUser);
+  updateUser(editUser : User) {
+    return this.http.put('http://127.0.0.1:3000/user/'+ editUser.id, editUser);
   }
 }
