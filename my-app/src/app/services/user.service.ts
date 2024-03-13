@@ -19,6 +19,6 @@ export class UserService {
   }
   
   updateUser(editUser : User) {
-    return this.http.put('http://127.0.0.1:3000/user/'+ editUser.id, editUser);
+    return this.http.put('http://127.0.0.1:3000/user/'+ editUser._id, editUser);
   }
 }

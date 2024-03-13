@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import {CommonModule, NgIf, UpperCasePipe} from '@angular/common';
-import {FormsModule} from '@angular/forms';;
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';;
 import { User } from '../models/user';
 import { Post } from '../models/post';
 import { PostDetailsComponent } from '../post-details/post-details.component';
@@ -10,44 +10,69 @@ import { UserService } from '../services/user.service';
   selector: 'app-user-details',
   standalone: true,
   templateUrl: './user-details.component.html',
-  imports: [FormsModule, NgIf, UpperCasePipe, CommonModule, PostDetailsComponent,],
+  imports: [FormsModule, NgIf, UpperCasePipe, CommonModule, PostDetailsComponent, ReactiveFormsModule],
   styleUrl: './user-details.component.css'
 })
 export class UserDetailsComponent {
   @Input() user?: User;
-  @Input() posts: Post[] = [];
   @Output() deselect = new EventEmitter<void>();
   @Output() showPostDetails = new EventEmitter<Post>();
-  editUser: User=   {  'id': 0,
+  @Output() userUpdated = new EventEmitter<User>();
+
+  editUserForm: FormGroup;
+
+
+  editUser: User=   {  '_id': '',
   'name': {
    'first_name': '',
    'middle_name':'',
    'last_name': '',
  },
- 'email':'hello@gmail.com',
- 'phone_number':0,
+ 'email':'@gmail.com',
+ 'phone_number':'',
  'gender':''
 };
 
-constructor(public userService: UserService) {}
+
+constructor(public userService: UserService, private formBuilder: FormBuilder) {
+  this.editUserForm = this.formBuilder.group({
+    name: this.formBuilder.group({
+      first_name: ['', [Validators.required]],
+      middle_name: ['', [Validators.required]],
+      last_name: ['', [Validators.required]]
+    }),
+    email: ['', [Validators.required, Validators.email]],
+    phone_number: ['', [Validators.required]],
+    gender: ['', [Validators.required]]
+  });
+
+  // Comprobar si hay un usuario recibido como entrada y actualizar el formulario si es necesario
+}
+
+public updateFormWithUserData(user: User): void {
+  // Actualizar los valores del formulario con los datos del usuario
+  this.editUserForm.patchValue({
+    name: {
+      first_name: user.name.first_name,
+      middle_name: user.name.middle_name,
+      last_name: user.name.last_name
+    },
+    email: user.email,
+    phone_number: user.phone_number,
+    gender: user.gender
+  });
+}
+
   update: boolean= false;
 
-  ngOnInit() {
-    this.editUser =   { 'id': 0,
-    'name': {
-     'first_name': this.user?.name.first_name!,
-     'middle_name': this.user?.name.middle_name!,
-     'last_name': this.user?.name.last_name!,
-   },
-   'email':this.user?.email!,
-   'phone_number':this.user?.phone_number!,
-   'gender': this.user?.gender!
- };
 
+  ngOnInit() {
+    if (this.user) {
+      this.updateFormWithUserData(this.user);
+    }   
   }
-  getUserPosts(userId: number): Post[] {
-    return this.posts.filter(post => post.userId === userId);
-  }
+ 
+  
 
   showPost(post: Post): void {
     this.showPostDetails.emit(post);
@@ -59,8 +84,33 @@ constructor(public userService: UserService) {}
   }
 
   updateUser(): void {
+
+    const formData = this.editUserForm.value;
+    this.editUser = {
+      _id: this.user?._id!, // Usamos el _id del usuario actual
+      name: {
+        first_name: formData.name.first_name,
+        middle_name: formData.name.middle_name,
+        last_name: formData.name.last_name
+      },
+      email: formData.email,
+      phone_number: formData.phone_number,
+      gender: formData.gender
+    };
+
     this.userService.updateUser(this.editUser).subscribe (editUser =>{
-      console.log(editUser);
+      this.user =   {
+        '_id': this.editUser?._id!,
+      'name': {
+       'first_name': this.editUser?.name.first_name!,
+       'middle_name': this.editUser?.name.middle_name!,
+       'last_name': this.editUser?.name.last_name!,
+     },
+     'email':this.editUser?.email!,
+     'phone_number':this.editUser?.phone_number!,
+     'gender': this.editUser?.gender! 
+    } 
+      this.userUpdated.emit(this.editUser);
     });
   }
 }
