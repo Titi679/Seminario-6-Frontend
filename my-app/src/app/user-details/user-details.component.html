@@ -55,5 +55,17 @@
   <div><span>Phone Number:</span> {{user.phone_number}}</div>
   <div><span>Gender:</span> {{user.gender}}</div>
   
+  <h3>Posts:</h3>
+  <li *ngFor="let post of posts">
+    <button type="button" (click)="onSelect(post)">
+      <span  class="name">{{post.title}}</span>
+    </button>
+  </li>
+
   <button (click)="deselect.emit()">Back to Users</button>
 </div>
+
+<app-post-details *ngIf="selectedPost" [post]="selectedPost"></app-post-details>
+
+
+

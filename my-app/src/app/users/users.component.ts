@@ -18,9 +18,7 @@ import { NgIf, NgFor, UpperCasePipe} from '@angular/common';
 export class UsersComponent {
 
   newUserForm: FormGroup;
-
   users: User[] = [];
-
   selectedUser?: User;
   userUpdated?: User;
   showAddUserForm: boolean = false;

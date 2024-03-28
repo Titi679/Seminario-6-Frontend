@@ -1,16 +1,17 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import {CommonModule, NgIf, UpperCasePipe} from '@angular/common';
+import {CommonModule, NgIf, NgFor, UpperCasePipe} from '@angular/common';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';;
 import { User } from '../models/user';
 import { Post } from '../models/post';
 import { PostDetailsComponent } from '../post-details/post-details.component';
 import { UserService } from '../services/user.service';
+import { PostService } from '../services/post.service';
 
 @Component({
   selector: 'app-user-details',
   standalone: true,
   templateUrl: './user-details.component.html',
-  imports: [FormsModule, NgIf, UpperCasePipe, CommonModule, PostDetailsComponent, ReactiveFormsModule],
+  imports: [FormsModule, NgIf, UpperCasePipe, CommonModule, PostDetailsComponent, ReactiveFormsModule, NgFor],
   styleUrl: './user-details.component.css'
 })
 export class UserDetailsComponent {
@@ -18,9 +19,19 @@ export class UserDetailsComponent {
   @Output() deselect = new EventEmitter<void>();
   @Output() showPostDetails = new EventEmitter<Post>();
   @Output() userUpdated = new EventEmitter<User>();
+  @Output() postUpdate = new EventEmitter<Post>();
+  @Output() postSelected = new EventEmitter<boolean>();
+
+  selectedPost?: Post;
+  postUpdated?: Post;
+
+  onSelect(post: Post): void {
+    this.selectedPost = post; // Almacena el post seleccionado
+  }
 
   editUserForm: FormGroup;
 
+  posts: Post[] = [];
 
   editUser: User=   {  '_id': '',
   'name': {
@@ -34,7 +45,7 @@ export class UserDetailsComponent {
 };
 
 
-constructor(public userService: UserService, private formBuilder: FormBuilder) {
+constructor(public userService: UserService, private formBuilder: FormBuilder, public postService: PostService) {
   this.editUserForm = this.formBuilder.group({
     name: this.formBuilder.group({
       first_name: ['', [Validators.required]],
@@ -70,9 +81,11 @@ public updateFormWithUserData(user: User): void {
     if (this.user) {
       this.updateFormWithUserData(this.user);
     }   
+    this.postService.getPosts().subscribe (posts =>{
+      this.posts = posts;
+      console.log(posts);
+    })
   }
- 
-  
 
   showPost(post: Post): void {
     this.showPostDetails.emit(post);
@@ -111,6 +124,22 @@ public updateFormWithUserData(user: User): void {
      'gender': this.editUser?.gender! 
     } 
       this.userUpdated.emit(this.editUser);
-    });
+    });    
+  }
+
+  onPostUpdated(post: Post): void {
+    this.postUpdated = post;
+  }
+
+  deselectPost(): void {
+    
+    if (this.selectedPost && this.postUpdated) {
+      const index = this.posts.findIndex(post => post._id === this.selectedPost!._id);
+      if (index !== -1) {
+        this.posts[index] = this.postUpdated;
+      }
+    }
+    this.selectedPost = undefined;
+    this.postSelected.emit(false); // Emitir false cuando se deselecciona un usuario
   }
 }
